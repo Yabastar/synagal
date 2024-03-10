@@ -100,18 +100,16 @@ objects[2][15] = -10
 objects[1][5] = 180
 
 
-
-function _G.pcall(f, ...)
-    return xpcall(f, debug.traceback, ...)
-    end
-    local oldresume = coroutine.resume
-    function coroutine.resume(coro, ...)
-    local res = table.pack(oldresume(coro, ...))
-    if not res[1] then res[2] = debug.traceback(coro, res[2]) end
-    return table.unpack(res, 1, res.n)
-end
-
 local function elasticequation(massA, massB, velocityA, velocityB)
+    local function pcall(f, ...)
+        return xpcall(f, debug.traceback, ...)
+        end
+        local oldresume = coroutine.resume
+        function coroutine.resume(coro, ...)
+        local res = table.pack(oldresume(coro, ...))
+        if not res[1] then res[2] = debug.traceback(coro, res[2]) end
+        return table.unpack(res, 1, res.n)
+    end
     local totalMass = massA + massB
 
     local successA, resultA = pcall(function() return (velocityA:mul(massA - massB) + velocityB:mul(2 * massB)):div(totalMass) end)
