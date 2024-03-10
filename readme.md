@@ -1,5 +1,6 @@
 
 To create a new object, use syngalObj
+
 syngalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10)
 
 
