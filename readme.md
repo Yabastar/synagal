@@ -45,6 +45,7 @@ Index 15 handles velocity Z
 
 Index 16 handles mass
 
+***
 
 Create an impulse using spherical rotation with x = r, y = theta (pitch), z = phi (yaw) using impulse(vector,object)
 
