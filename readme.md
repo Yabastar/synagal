@@ -4,10 +4,13 @@ syngalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10)
 
 
 1. Model path
+
    
 2-4. XYZ
+
    
 5-7. Rotation XYZ
+
 
 8. Mass
 
