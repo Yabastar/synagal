@@ -20,6 +20,7 @@ syngalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10)
 
 Objects are in variable objects
 
+***
 
 Index 1 handles X
 
