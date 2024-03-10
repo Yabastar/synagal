@@ -1,7 +1,5 @@
 -- import library
 local Pine3D = require("Pine3D")
-local expect = require "cc.expect"
-local expect = expect.expect
 
 -- create a new frame
 local ThreeDFrame = Pine3D.newFrame()
@@ -33,11 +31,39 @@ local environmentObjects = {
   })),
 }
 
+-- create objects to render normally
+local objects = {}
+
+local function synagalObj(model,x,y,z,rotx,roty,rotz,mass)
+    local createobj = ThreeDFrame:newObject(model,x,y,z,rotx,roty,rotz)
+    createobj[13] = 0
+    createobj[14] = 0
+    createobj[15] = 0
+    createobj[16] = mass
+    table.insert(objects,createobj)
+end
+
 local function calculateTerminalVelocity(mass)
     local tVC = 5
     local terminalVelocity = tVC * math.sqrt(mass)
     return terminalVelocity
 end
+
+
+
+
+-- Define object data here
+
+synagalObj("models/plane_modern", 100, 0, -80, nil, math.pi*0.125, nil,25)
+synagalObj("models/plane_modern", 100, 0, -80, nil, math.pi*0.125, nil,75)
+
+objects[1][15] = 10
+objects[2][15] = 10
+objects[1][5] = 180
+objects[2][5] = 180
+
+
+
 
 local function render()
     ThreeDFrame:drawObjects(environmentObjects)
@@ -68,48 +94,18 @@ local function impulse(vec,i)
     objects[i][15] = z
 end
 
-local objects = {}
 
-local function syngalObj(model,x,y,z,rotx,roty,rotz,mass)
-  expect(1,model,"string")
-  expect(2,x,"int")
-  expect(3,y,"int")
-  expect(4,z,"int")
-  expect(5,rotx,"int","nil")
-  expect(6,roty,"int","nil")
-  expect(7,rotz,"int","nil")
-  expect(8,mass,"int")
-  
-  local createobj = ThreeDFrame:newObject(model, x, y, z, rotx, roty, rotz)
-  createobj[13] = 0
-  createobj[14] = 0
-  createobj[15] = 0
-  createobj[16] = mass
-  table.insert(objects,createobj)
+function _G.pcall(f, ...)
+    return xpcall(f, debug.traceback, ...)
+    end
+    local oldresume = coroutine.resume
+    function coroutine.resume(coro, ...)
+    local res = table.pack(oldresume(coro, ...))
+    if not res[1] then res[2] = debug.traceback(coro, res[2]) end
+    return table.unpack(res, 1, res.n)
 end
 
-
-
--- As of 0.0-b.1, you have to define object data below this comment.
-
-syngalObj("models/pineapple", 100, 0, 80, nil, math.pi*0.125, nil, 10)
-syngalObj("models/pineapple", 100, 0, -80, nil, math.pi*0.125, nil, 10)
-
-objects[1][15] = 10
-objects[2][15] = -10
-objects[1][5] = 180
-
-
 local function elasticequation(massA, massB, velocityA, velocityB)
-    local function pcall(f, ...)
-        return xpcall(f, debug.traceback, ...)
-        end
-        local oldresume = coroutine.resume
-        function coroutine.resume(coro, ...)
-        local res = table.pack(oldresume(coro, ...))
-        if not res[1] then res[2] = debug.traceback(coro, res[2]) end
-        return table.unpack(res, 1, res.n)
-    end
     local totalMass = massA + massB
 
     local successA, resultA = pcall(function() return (velocityA:mul(massA - massB) + velocityB:mul(2 * massB)):div(totalMass) end)
@@ -147,10 +143,10 @@ while true do
                 end
                 local curvel = objects[i][14]
                 local tV = calculateTerminalVelocity(objects[i][16])
-                if (curvel + 0.05) > tV then
+                if (curvel + (0.05*(objects[i][16]/10))) > tV then
                     curvel = tV
                 else
-                    curvel = curvel + 0.05
+                    curvel = curvel + (0.05*(objects[i][16]/10))
                     objects[i][14] = curvel
                 end
                 objects[i][2] = objects[i][2] - curvel
