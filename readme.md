@@ -4,6 +4,7 @@ To create a new object, use syngalObj
 syngalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10)
 
 
+
 1. Model path
 
    
@@ -14,6 +15,7 @@ syngalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10)
 
 
 8. Mass
+
 
 
 Objects are in variable objects
