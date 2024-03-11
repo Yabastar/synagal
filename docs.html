@@ -29,8 +29,11 @@ Enables or disables collision<br><br>
 
 10. (Optional) Hitbox multiplier<br>
 type = number<br>
-A lower number increases hitbox size<br><br> 
+A lower number increases hitbox size
 </p>
+<pre>
+local objectA = Synagal.synagalObj("models/pineapple", 100, 0, -80, nil, math.pi*0.125, nil, 25, true)
+</pre>
 <hr>
 <p>
 <b>Synagal.impulse</b><br><br>
@@ -58,6 +61,10 @@ Returns: void<br><br>
 1. SYNAGAL object<br>
 type = SYNAGAL object<br><br>
 
+   
+2. Gravity<br>
+type = number<br>
+Amount of gravity (default 1)
 <pre>
 Synagal.setGravity(objectA, 1)
 </pre>
@@ -70,6 +77,10 @@ Returns: void<br><br>
 1. SYNAGAL object<br>
 type = SYNAGAL object<br><br>
 
+
+2. Collision<br>
+type = boolean<br>
+Enables or disables collision
 <pre>
 Synagal.setCollision(objectA, true)
 </pre>
@@ -82,6 +93,10 @@ Returns: void<br><br>
 1. SYNAGAL object<br>
 type = SYNAGAL object<br><br>
 
+
+2. Mass<br>
+type = number<br>
+Mass of object (1 unit is about 0.1 kg)
 <pre>
 Synagal.setMass(objectA, 50)
 </pre>
@@ -94,6 +109,10 @@ Returns: void<br><br>
 1. SYNAGAL object<br>
 type = SYNAGAL object<br><br>
 
+
+2-4. X,Y,Z<br>
+type = number<br>
+X,Y,Z velocity
 <pre>Synagal.setVelocity(objectA, 10, 5, 30)</pre>
 
 <hr>
@@ -105,6 +124,10 @@ Returns: void<br><br>
 1. SYNAGAL object<br>
 type = SYNAGAL object<br><br>
 
+
+2. Vector<br>
+type = vector<br>
+Vector containing velocity values
 <pre>
 local velocity = vector.new(10,5,30) -- x,y,z
 
@@ -119,6 +142,10 @@ Returns: void<br><br>
 1. SYNAGAL object<br>
 type = SYNAGAL object<br><br>
 
+
+2. Hitbox divisor<br>
+type = number<br>
+Sets hitbox size, a lower number is a bigger hitbox
 <pre>
 Syagal.setHitbox(objectA, 1) -- default is 2, size increases the lower the number
 </pre>
