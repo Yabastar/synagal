@@ -20,7 +20,7 @@ syngalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10, true, 2)
 
 10. Hitbox multiplier (can be nil, defaults to **2** as standard hitbox)
 
-Objects are in variable objects
+Objects are in variable `objects`
 
 ***
 
