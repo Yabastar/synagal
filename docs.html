@@ -1,4 +1,3 @@
-<hr>
 <p>
 <b>Synagal.synagalObj</b><br><br>
 
@@ -34,9 +33,16 @@ A lower number increases hitbox size<br><br>
 </p>
 <hr>
 <p>
-<b>Synagal.impulse</b><br>
+<b>Synagal.impulse</b><br><br>
 
-To create an impulse, for example r=10, theta=30, phi=60, object 1, do<br><br>
+Returns: void<br><br>
+1. SYNAGAL object<br>
+type = SYNAGAL object<br><br>
+
+
+2. X,Y,Z spherical<br>
+type = vector<br>
+Vector containing a spherical angle
 </p>
 <pre>
 local spherical = vector.new(10,30,60)
@@ -47,7 +53,10 @@ Synagal.impulse(spherical,objectA)
 <p>
 <b>Synagal.setGravity</b><br><br>
 
-Sets an object's gravity<br><br>
+
+Returns: void<br><br>
+1. SYNAGAL object<br>
+type = SYNAGAL object<br><br>
 
 <pre>
 Synagal.setGravity(objectA, 1)
@@ -56,7 +65,10 @@ Synagal.setGravity(objectA, 1)
 
 <b>Synagal.setCollision</b><br><br>
 
-Sets an object's collision status<br><br>
+
+Returns: void<br><br>
+1. SYNAGAL object<br>
+type = SYNAGAL object<br><br>
 
 <pre>
 Synagal.setCollision(objectA, true)
@@ -65,15 +77,22 @@ Synagal.setCollision(objectA, true)
 
 <b>Synagal.setMass</b>
 
-Sets an object's mass (1 unit ≈ 0.1 kg)
 
+Returns: void<br><br>
+1. SYNAGAL object<br>
+type = SYNAGAL object<br><br>
+
+<pre>
 Synagal.setMass(objectA, 50)
-
+</pre>
 <hr>
 
 <b>Synagal.setVelocity</b>
 
-Sets an object's velocity (x,y,z)
+
+Returns: void<br><br>
+1. SYNAGAL object<br>
+type = SYNAGAL object<br><br>
 
 <pre>Synagal.setVelocity(objectA, 10, 5, 30)</pre>
 
@@ -81,17 +100,26 @@ Sets an object's velocity (x,y,z)
 
 <b>Synagal.setVelocityVector</b>
 
-Sets an object's velocity in vector form
 
+Returns: void<br><br>
+1. SYNAGAL object<br>
+type = SYNAGAL object<br><br>
+
+<pre>
 local velocity = vector.new(10,5,30) -- x,y,z
 
 Synagal.setVelocityVector(objectA, velocity)
-
+</pre>
 <hr>
 
 <b>Synagal.setHitbox</b>
 
-Sets an object's hitbox size
 
+Returns: void<br><br>
+1. SYNAGAL object<br>
+type = SYNAGAL object<br><br>
+
+<pre>
 Syagal.setHitbox(objectA, 1) -- default is 2, size increases the lower the number
+</pre>
 <hr>
