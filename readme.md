@@ -1,7 +1,7 @@
 Docs
 ----
 
-**Synagal.synagalObj**  
+**``Synagal.synagalObj``**
   
 Creates a SYNAGAL object  
   
@@ -35,7 +35,7 @@ A lower number increases hitbox size
 
 * * *
 
-**Synagal.impulse**  
+**``Synagal.impulse``**  
   
 Returns: void  
   
@@ -54,7 +54,7 @@ Synagal.impulse(spherical,objectA)
 
 * * *
 
-**Synagal.setGravity**  
+**``Synagal.setGravity``**  
   
 Returns: void  
   
@@ -69,7 +69,7 @@ Amount of gravity (default 1)
 
 * * *
 
-**Synagal.setCollision**  
+**``Synagal.setCollision``**  
   
 Returns: void  
   
@@ -84,7 +84,7 @@ Enables or disables collision
 
 * * *
 
-**Synagal.setMass**  
+**``Synagal.setMass``**  
   
 Returns: void  
   
@@ -99,7 +99,7 @@ Mass of object (1 unit is about 0.1 kg)
 
 * * *
 
-**Synagal.setVelocity**  
+**``Synagal.setVelocity``**  
   
 Returns: void  
   
@@ -114,7 +114,7 @@ X,Y,Z velocity
 
 * * *
 
-**Synagal.setVelocityVector**  
+**``Synagal.setVelocityVector``**  
   
 Returns: void  
   
@@ -132,7 +132,7 @@ Synagal.setVelocityVector(objectA, velocity)
 
 * * *
 
-**Synagal.setHitbox**
+**``Synagal.setHitbox``**
   
 Returns: void  
   
