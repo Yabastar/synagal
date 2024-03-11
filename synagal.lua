@@ -31,10 +31,10 @@ local environmentObjects = {
   })),
 }
 
--- create objects to render normally
 local objects = {}
+Synagal = {}
 
-local function synagalObj(model,x,y,z,rotx,roty,rotz,mass,collision,hitboxMul)
+function Synagal.synagalObj(model,x,y,z,rotx,roty,rotz,mass,collision,hitboxMul)
     local createobj = ThreeDFrame:newObject(model,x,y,z,rotx,roty,rotz)
     createobj[13] = 0
     createobj[14] = 0
@@ -51,7 +51,10 @@ local function synagalObj(model,x,y,z,rotx,roty,rotz,mass,collision,hitboxMul)
         createobj[17] = false
         createobj[18] = 2
     end
+    createobj[19] = 1
+    createobj[20] = 1
     table.insert(objects,createobj)
+    return createobj
 end
 
 local function calculateTerminalVelocity(mass)
@@ -60,28 +63,81 @@ local function calculateTerminalVelocity(mass)
     return terminalVelocity
 end
 
+function Synagal.setCollision(object, setting)
+    object[17] = setting
+end
 
+function Synagal.setHitbox(object, number)
+    object[18] = number
+end
 
+function Synagal.setVelocity(object,x,y,z)
+    object[13] = x
+    object[14] = y
+    object[15] = z
+end
 
--- Define object data here
+function Synagal.setVelocityVector(object,vec)
+    object[13] = vec.x
+    object[14] = vec.y
+    object[15] = vec.z
+end
 
-synagalObj("models/plane_modern", 100, 0, -80, nil, math.pi*0.125, nil, 25, true)
-synagalObj("models/plane_modern", 100, 0, 80, nil, math.pi*-0.125, nil, 25, true)
+function Synagal.setvX(object,x)
+    object[13] = x
+end
 
-objects[1][15] = 10
-objects[2][15] = -10
-objects[1][5] = 180
+function Synagal.setvY(object,y)
+    object[14] = y
+end
 
+function Synagal.setvZ(object,z)
+    object[15] = z
+end
 
+function Synagal.setX(object,x)
+    object[1] = x
+end
 
+function Synagal.setY(object,y)
+    object[2] = y
+end
 
-local function render()
+function Synagal.setZ(object,z)
+    object[3] = z
+end
+
+function Synagal.setrotX(object,x)
+    object[4] = x
+end
+
+function Synagal.setrotY(object,y)
+    object[5] = y
+end
+
+function Synagal.setrotZ(object,z)
+    object[6] = z
+end
+
+function Synagal.setMass(object,mass)
+    object[16] = mass
+end
+
+function Synagal.setGravity(object,gravity)
+    object[19] = gravity
+end
+
+function Synagal.setFriction(object,friction)
+    object[20] = (friction*0.1)+0.1
+end
+
+function Synagal.render()
     ThreeDFrame:drawObjects(environmentObjects)
     ThreeDFrame:drawObjects(objects)
     ThreeDFrame:drawBuffer()
 end
 
-function distance3D(x1, y1, z1, x2, y2, z2)
+local function distance3D(x1, y1, z1, x2, y2, z2)
     return math.sqrt((x2 - x1)^2 + (y2 - y1)^2 + (z2 - z1)^2)
 end
 
@@ -97,39 +153,37 @@ local function sphToRect(vec)
     return vector.new(vec.x * math.sin(vec.y) * math.cos(vec.z), vec.x * math.sin(vec.y) * math.sin(vec.z), vec.x * math.cos(vec.y))
 end
 
-local function impulse(vec,i)
+function Synagal.impulse(vec,object)
     local x,y,z = table.unpack(sphToRect(vec))
-    objects[i][13] = x
-    objects[i][14] = y
-    objects[i][15] = z
+    object[13] = x
+    object[14] = y
+    object[15] = z
 end
 
-
-function _G.pcall(f, ...)
-    return xpcall(f, debug.traceback, ...)
-    end
-    local oldresume = coroutine.resume
-    function coroutine.resume(coro, ...)
-    local res = table.pack(oldresume(coro, ...))
-    if not res[1] then res[2] = debug.traceback(coro, res[2]) end
-    return table.unpack(res, 1, res.n)
-end
 
 local function elasticequation(massA, massB, velocityA, velocityB, hitboxMulA, hitboxMulB)
+    local function npcall(f, ...)
+        return xpcall(f, debug.traceback, ...)
+        end
+        local oldresume = coroutine.resume
+        function coroutine.resume(coro, ...)
+        local res = table.pack(oldresume(coro, ...))
+        if not res[1] then res[2] = debug.traceback(coro, res[2]) end
+        return table.unpack(res, 1, res.n)
+    end
     local totalMass = massA + massB
 
-    local successA, resultA = pcall(function() return (velocityA:mul(massA - massB) + velocityB:mul(hitboxMulA * massB)):div(totalMass) end)
+    local successA, resultA = npcall(function() return (velocityA:mul(massA - massB) + velocityB:mul(hitboxMulA * massB)):div(totalMass) end)
     assert(successA, "Error in vector operation for finalvA: " .. textutils.serialise(resultA))
 
-    local successB, resultB = pcall(function() return (velocityB:mul(massB - massA) + velocityA:mul(hitboxMulB * massA)):div(totalMass) end)
+    local successB, resultB = npcall(function() return (velocityB:mul(massB - massA) + velocityA:mul(hitboxMulB * massA)):div(totalMass) end)
     assert(successB, "Error in vector operation for finalvB: " .. textutils.serialise(resultB))
 
     return resultA, resultB
 end
 
 
-while true do
-    sleep(0.05)
+function Synagal.cycle()
     for i in pairs(objects) do
         local msize = objects[i][8] 
         for j in pairs(objects) do
@@ -154,11 +208,13 @@ while true do
                     end
                 end
                 local curvel = objects[i][14]
+                local gravity = objects[i][19]
+                local objFriction = objects[i][20]
                 local tV = calculateTerminalVelocity(objects[i][16])
-                if (curvel + (0.05*(objects[i][16]/10))) > tV then
-                    curvel = tV
+                if (curvel + ((gravity*0.05)*(objects[i][16]/10))) > (tV*gravity) then
+                    curvel = (tV*gravity)
                 else
-                    curvel = curvel + (0.05*(objects[i][16]/10))
+                    curvel = curvel + ((gravity*0.05)*(objects[i][16]/10))
                     objects[i][14] = curvel
                 end
                 objects[i][2] = objects[i][2] - curvel
@@ -167,8 +223,8 @@ while true do
                 if math.abs(objects[i][13]) > 0 then
                     if objects[i][13] > 0 then
                         if friction == true then
-                            if (objects[i][13] - 0.2) > 0 then
-                                objects[i][13] = objects[i][13] - 0.2
+                            if (objects[i][13] - objFriction) > 0 then
+                                objects[i][13] = objects[i][13] - objFriction
                             else
                                 objects[i][13] = 0
                             end
@@ -181,10 +237,10 @@ while true do
                         end
                     else
                         if friction == true then
-                            if (objects[i][13] + 0.2) > 0 then
+                            if (objects[i][13] + objFriction) > 0 then
                                 objects[i][13] = 0
                             else
-                                objects[i][13] = objects[i][13] + 0.2
+                                objects[i][13] = objects[i][13] + objFriction
                             end
                         else
                             if (objects[i][13] + 0.1) > 0 then
@@ -200,8 +256,8 @@ while true do
                 if math.abs(objects[i][15]) > 0 then
                     if objects[i][15] > 0 then
                         if friction == true then
-                            if (objects[i][15] - 0.2) > 0 then
-                                objects[i][15] = objects[i][15] - 0.2
+                            if (objects[i][15] - objFriction) > 0 then
+                                objects[i][15] = objects[i][15] - objFriction
                             else
                                 objects[i][15] = 0
                             end
@@ -214,10 +270,10 @@ while true do
                         end
                     else
                         if friction == true then
-                            if (objects[i][15] + 0.2) > 0 then
+                            if (objects[i][15] + objFriction) > 0 then
                                 objects[i][15] = 0
                             else
-                                objects[i][15] = objects[i][15] + 0.2
+                                objects[i][15] = objects[i][15] + objFriction
                             end
                         else
                             if (objects[i][15] + 0.1) > 0 then
@@ -231,5 +287,6 @@ while true do
             end
         end
     end
-    render()
 end
+
+return Synagal
