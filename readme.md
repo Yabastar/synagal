@@ -31,7 +31,7 @@ Enables or disables collision
 type = number  
 A lower number increases hitbox size
 
-local objectA = Synagal.synagalObj("models/pineapple", 100, 0, -80, nil, math.pi\*0.125, nil, 25, true)
+`local objectA = Synagal.synagalObj("models/pineapple", 100, 0, -80, nil, math.pi*0.125, nil, 25, true)`
 
 * * *
 
@@ -46,9 +46,11 @@ type = SYNAGAL object
 type = vector  
 Vector containing a spherical angle
 
+```
 local spherical = vector.new(10,30,60)
 
 Synagal.impulse(spherical,objectA)
+```
 
 * * *
 
@@ -63,7 +65,7 @@ type = SYNAGAL object
 type = number  
 Amount of gravity (default 1)
 
-Synagal.setGravity(objectA, 1)
+`Synagal.setGravity(objectA, 1)`
 
 * * *
 
@@ -78,7 +80,7 @@ type = SYNAGAL object
 type = boolean  
 Enables or disables collision
 
-Synagal.setCollision(objectA, true)
+`Synagal.setCollision(objectA, true)`
 
 * * *
 
@@ -93,7 +95,7 @@ type = SYNAGAL object
 type = number  
 Mass of object (1 unit is about 0.1 kg)
 
-Synagal.setMass(objectA, 50)
+`Synagal.setMass(objectA, 50)`
 
 * * *
 
@@ -108,7 +110,7 @@ type = SYNAGAL object
 type = number  
 X,Y,Z velocity
 
-Synagal.setVelocity(objectA, 10, 5, 30)
+`Synagal.setVelocity(objectA, 10, 5, 30)`
 
 * * *
 
@@ -122,14 +124,15 @@ type = SYNAGAL object
 2\. Vector  
 type = vector  
 Vector containing velocity values
-
+```
 local velocity = vector.new(10,5,30) -- x,y,z
 
 Synagal.setVelocityVector(objectA, velocity)
+```
 
 * * *
 
-**Synagal.setHitbox**  
+**Synagal.setHitbox**
   
 Returns: void  
   
@@ -140,10 +143,11 @@ type = SYNAGAL object
 type = number  
 Sets hitbox size, a lower number is a bigger hitbox
 
-Syagal.setHitbox(objectA, 1) -- default is 2, size increases the lower the number
+`Syagal.setHitbox(objectA, 1) -- default is 2, size increases the lower the number`
 
 * * *
 
+```
 setX
 setY
 setZ
@@ -153,7 +157,7 @@ setvZ
 setrotX -- rotation X
 setrotY
 setrotZ
-
+```
 All apply to the following  
   
 Returns: void  
