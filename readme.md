@@ -1,7 +1,7 @@
 
-To create a new object, use syngalObj
+To create a new object, use synagalObj
 
-syngalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10, true, 2)
+synagalObj("models/pineapple", 100, 0, 80, nil,  math.pi*0.125, nil, 10, true, 2)
 
 
 
