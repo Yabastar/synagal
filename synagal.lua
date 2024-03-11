@@ -34,12 +34,23 @@ local environmentObjects = {
 -- create objects to render normally
 local objects = {}
 
-local function synagalObj(model,x,y,z,rotx,roty,rotz,mass)
+local function synagalObj(model,x,y,z,rotx,roty,rotz,mass,collision,hitboxMul)
     local createobj = ThreeDFrame:newObject(model,x,y,z,rotx,roty,rotz)
     createobj[13] = 0
     createobj[14] = 0
     createobj[15] = 0
     createobj[16] = mass
+    if collision == true then
+        createobj[17] = true
+        if hitboxMul ~= nil then
+            createobj[18] = hitboxMul
+        else
+            createobj[18] = 2
+        end
+    else
+        createobj[17] = false
+        createobj[18] = 2
+    end
     table.insert(objects,createobj)
 end
 
@@ -54,13 +65,12 @@ end
 
 -- Define object data here
 
-synagalObj("models/plane_modern", 100, 0, -80, nil, math.pi*0.125, nil,25)
-synagalObj("models/plane_modern", 100, 0, -80, nil, math.pi*0.125, nil,75)
+synagalObj("models/plane_modern", 100, 0, -80, nil, math.pi*0.125, nil, 25, true)
+synagalObj("models/plane_modern", 100, 0, 80, nil, math.pi*-0.125, nil, 25, true)
 
 objects[1][15] = 10
-objects[2][15] = 10
+objects[2][15] = -10
 objects[1][5] = 180
-objects[2][5] = 180
 
 
 
@@ -105,13 +115,13 @@ function _G.pcall(f, ...)
     return table.unpack(res, 1, res.n)
 end
 
-local function elasticequation(massA, massB, velocityA, velocityB)
+local function elasticequation(massA, massB, velocityA, velocityB, hitboxMulA, hitboxMulB)
     local totalMass = massA + massB
 
-    local successA, resultA = pcall(function() return (velocityA:mul(massA - massB) + velocityB:mul(2 * massB)):div(totalMass) end)
+    local successA, resultA = pcall(function() return (velocityA:mul(massA - massB) + velocityB:mul(hitboxMulA * massB)):div(totalMass) end)
     assert(successA, "Error in vector operation for finalvA: " .. textutils.serialise(resultA))
 
-    local successB, resultB = pcall(function() return (velocityB:mul(massB - massA) + velocityA:mul(2 * massA)):div(totalMass) end)
+    local successB, resultB = pcall(function() return (velocityB:mul(massB - massA) + velocityA:mul(hitboxMulB * massA)):div(totalMass) end)
     assert(successB, "Error in vector operation for finalvB: " .. textutils.serialise(resultB))
 
     return resultA, resultB
@@ -129,17 +139,19 @@ while true do
                 local res = spheresCollide(msize/2, msize2/2, dist)
                 local friction = false
                 if res == true then
-                    local dvector = vector.new(objects[i][13],objects[i][14],objects[i][15])
-                    local dvector2 = vector.new(objects[j][13],objects[j][14],objects[j][15])
-                    local finalvA,finalvB = elasticequation(objects[i][16],objects[j][16],dvector,dvector2)
-                    objects[i][13] = finalvA.x
-                    objects[i][14] = finalvA.y
-                    objects[i][15] = finalvA.z
+                    if objects[i][17] == true then
+                        local dvector = vector.new(objects[i][13],objects[i][14],objects[i][15])
+                        local dvector2 = vector.new(objects[j][13],objects[j][14],objects[j][15])
+                        local finalvA,finalvB = elasticequation(objects[i][16],objects[j][16],dvector,dvector2,objects[i][18],objects[j][18])
+                        objects[i][13] = finalvA.x
+                        objects[i][14] = finalvA.y
+                        objects[i][15] = finalvA.z
 
-                    objects[j][13] = finalvB.x
-                    objects[j][14] = finalvB.y
-                    objects[j][15] = finalvB.z
-                    friction = true
+                        objects[j][13] = finalvB.x
+                        objects[j][14] = finalvB.y
+                        objects[j][15] = finalvB.z
+                        friction = true
+                    end
                 end
                 local curvel = objects[i][14]
                 local tV = calculateTerminalVelocity(objects[i][16])
